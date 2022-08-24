@@ -28,22 +28,17 @@ public class Inventory {
     }
 
     public static void decreaseStock(OrderPlaced orderPlaced) {
-        /** Example 1:  new item 
-        Inventory inventory = new Inventory();
-        repository().save(inventory);
 
-        */
-
-        /** Example 2:  finding and process
+        /** fill out following code  */
         
-        repository().findById(orderPlaced.get???()).ifPresent(inventory->{
+        repository().findByOrderId(orderPlaced.getId()).ifPresent(inventory->{
             
-            inventory // do something
+            inventory.setStock(inventory.getStock() - orderPlaced.getQty()); // do something
             repository().save(inventory);
 
 
          });
-        */
+      
 
     }
 }
