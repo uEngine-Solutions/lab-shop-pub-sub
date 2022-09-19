@@ -71,11 +71,6 @@ public class Order  {
 
 
 
-    public void cancel(){
-        OrderCancelled orderCancelled = new OrderCancelled(this);
-        orderCancelled.publishAfterCommit();
-
-    }
 
 
 
