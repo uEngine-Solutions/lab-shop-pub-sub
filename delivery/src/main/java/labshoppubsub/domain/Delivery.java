@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import labshoppubsub.DeliveryApplication;
+import labshoppubsub.domain.DeliveryStarted;
 import lombok.Data;
 
 @Entity
@@ -19,6 +20,12 @@ public class Delivery {
 
     private Long orderId;
 
+    @PostPersist
+    public void onPostPersist() {
+        DeliveryStarted deliveryStarted = new DeliveryStarted(this);
+        deliveryStarted.publishAfterCommit();
+    }
+
     public static DeliveryRepository repository() {
         DeliveryRepository deliveryRepository = DeliveryApplication.applicationContext.getBean(
             DeliveryRepository.class
@@ -31,6 +38,8 @@ public class Delivery {
         Delivery delivery = new Delivery();
         repository().save(delivery);
 
+        DeliveryStarted deliveryStarted = new DeliveryStarted(delivery);
+        deliveryStarted.publishAfterCommit();
         */
 
         /** Example 2:  finding and process
@@ -40,6 +49,8 @@ public class Delivery {
             delivery // do something
             repository().save(delivery);
 
+            DeliveryStarted deliveryStarted = new DeliveryStarted(delivery);
+            deliveryStarted.publishAfterCommit();
 
          });
         */
