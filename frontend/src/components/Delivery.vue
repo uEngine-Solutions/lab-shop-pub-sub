@@ -10,17 +10,15 @@
         </template>
 
         <v-card-title v-if="value._links">
-            Order # {{value._links.self.href.split("/")[value._links.self.href.split("/").length - 1]}}
+            Delivery # {{value._links.self.href.split("/")[value._links.self.href.split("/").length - 1]}}
         </v-card-title >
         <v-card-title v-else>
-            Order
+            Delivery
         </v-card-title >
 
         <v-card-text>
-            <String label="ProductId" v-model="value.productId" :editMode="editMode"/>
-            <Number label="Qty" v-model="value.qty" :editMode="editMode"/>
             <String label="CustomerId" v-model="value.customerId" :editMode="editMode"/>
-            <Number label="Amount" v-model="value.amount" :editMode="editMode"/>
+            <Number label="OrderId" v-model="value.orderId" :editMode="editMode"/>
         </v-card-text>
 
         <v-card-actions>
@@ -59,15 +57,7 @@
             </v-btn>
         </v-card-actions>
         <v-card-actions>
-            <v-spacer></v-spacer>                        
-            <v-btn
-                    v-if="!editMode"
-                    color="deep-purple lighten-2"
-                    text
-                    @click="cancel"
-            >
-                Cancel
-            </v-btn>
+            <v-spacer></v-spacer>
         </v-card-actions>
 
         <v-snackbar
@@ -90,7 +80,7 @@
 
 
     export default {
-        name: 'Order',
+        name: 'Delivery',
         components:{
         },
         props: {
@@ -106,7 +96,7 @@
                 text: ''
             },
         }),
-        created(){
+        computed:{
         },
         methods: {
             selectFile(){
@@ -142,7 +132,7 @@
 
                     if(!this.offline) {
                         if(this.isNew) {
-                            temp = await axios.post(axios.fixUrl('/orders'), this.value)
+                            temp = await axios.post(axios.fixUrl('/deliveries'), this.value)
                         } else {
                             temp = await axios.put(axios.fixUrl(this.value._links.self.href), this.value)
                         }
@@ -198,25 +188,6 @@
             },
             change(){
                 this.$emit('input', this.value);
-            },
-            async cancel() {
-                try {
-                    if(!this.offline) {
-                        var temp = await axios.put(axios.fixUrl(this.value._links['cancel'].href))
-                        for(var k in temp.data) {
-                            this.value[k]=temp.data[k];
-                        }
-                    }
-
-                    this.editMode = false;
-                } catch(e) {
-                    this.snackbar.status = true
-                    if(e.response && e.response.data.message) {
-                        this.snackbar.text = e.response.data.message
-                    } else {
-                        this.snackbar.text = e
-                    }
-                }
             },
         },
     }
