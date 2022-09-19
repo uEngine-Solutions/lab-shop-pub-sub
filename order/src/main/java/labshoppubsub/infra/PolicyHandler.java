@@ -21,6 +21,22 @@ public class PolicyHandler {
 
     @StreamListener(KafkaProcessor.INPUT)
     public void whatever(@Payload String eventString) {}
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='DeliveryStarted'"
+    )
+    public void wheneverDeliveryStarted_UpdateStatus(
+        @Payload DeliveryStarted deliveryStarted
+    ) {
+        DeliveryStarted event = deliveryStarted;
+        System.out.println(
+            "\n\n##### listener UpdateStatus : " + deliveryStarted + "\n\n"
+        );
+
+        // Sample Logic //
+        Order.updateStatus(event);
+    }
     // keep
 
 }
